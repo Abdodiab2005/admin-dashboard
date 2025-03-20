@@ -1,0 +1,218 @@
+<div class="!hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 min-w-72" id="popup">
+  <div
+    id="crud-modal"
+    tabindex="-1"
+    class="!hidden overflow-y-auto overflow-x-hidden z-50 w-full md:inset-0 h-[calc(100%-1rem)] max-h-full flex justify-center items-center">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+      <!-- Modal content -->
+      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 px-6 py-4 pt-0">
+        <!-- Modal header -->
+        <div class="flex items-center justify-between py-5 border-b rounded-t dark:border-gray-600">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Create New Product</h3>
+          <button
+            type="button"
+            id="close-popup"
+            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+            data-modal-toggle="crud-modal">
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+            </svg>
+            <span class="sr-only">Close modal</span>
+          </button>
+        </div>
+        <!-- Modal body -->
+        <div class="grid gap-4 mb-4 grid-cols-2">
+          <div class="col-span-2 w-full">
+            <div
+              id="file"
+              class="container w-full bg-blue-50 shadow-lg rounded-lg p-4 flex flex-col items-center justify-between gap-2 h-72 cursor-pointer">
+              <!-- Drag-and-Drop Zone -->
+              <div
+                id="dropzone"
+                class="header flex flex-col items-center justify-center flex-1 w-full border-2 border-dashed border-royalblue rounded-lg p-4 relative">
+                <img id="image-preview" src="" alt="Preview" class="hidden w-24 h-24 object-cover rounded-lg" />
+                <i id="upload-icon" class="fas fa-cloud-upload-alt text-6xl text-black"></i>
+                <p id="upload-text" class="text-center text-black">
+                  Drag & Drop an image or <span class="text-blue-600 cursor-pointer underline">browse</span> to upload!
+                </p>
+              </div>
+
+              <!-- File Input -->
+              <input
+                id="imgFile"
+                name="img"
+                type="file"
+                class="hidden"
+                required
+                accept="image/*"
+                novalidate
+                style="display: none" />
+
+              <!-- Selected File Info and Delete Button -->
+              <div
+                class="footer bg-blue-50 hover:bg-blue-100 border-none w-full h-10 px-2 rounded-lg flex items-center justify-between text-black">
+                <p id="file-name" class="flex-1 text-center">No file selected</p>
+                <button id="delete-btn" class="hidden">
+                  <i
+                    class="fas fa-trash-alt text-2xl text-royalblue bg-gray-100 rounded-full p-1 cursor-pointer shadow-md"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-span-2">
+            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              placeholder="Type product name"
+              required="" />
+          </div>
+
+          <div class="col-span-2 sm:col-span-1">
+            <label for="stock" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Stock</label>
+            <input
+              type="number"
+              name="stock"
+              id="stock"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              placeholder="20"
+              required="" />
+          </div>
+          <div class="col-span-2 sm:col-span-1">
+            <label for="isFeatured" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >is Featured</label
+            >
+            <select
+              id="isFeatured"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+              <option selected="">Select option</option>
+              <option value="true">true</option>
+              <option value="false">False</option>
+            </select>
+          </div>
+          <div class="col-span-2 sm:col-span-1">
+            <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Price</label>
+            <input
+              type="number"
+              name="price"
+              id="price"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              placeholder="2999 L.E"
+              required="" />
+          </div>
+          <div class="col-span-2 sm:col-span-1">
+            <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Category</label>
+            <select
+              id="category"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+              <option selected="">Select category</option>
+              <% categories.forEach(category => {%>
+              <option><%= category.name %></option>
+              <% }); %>
+            </select>
+          </div>
+          <div class="col-span-2">
+            <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >Product Description</label
+            >
+            <textarea
+              id="description"
+              rows="4"
+              class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Write product description here"></textarea>
+          </div>
+          <!-- Product Details Section -->
+          <div class="col-span-2">
+            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product Details</label>
+            <div class="grid gap-4 mb-4 grid-cols-2">
+              <div>
+                <input
+                  type="text"
+                  name="detail-key"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                  placeholder="Key"
+                  required="" />
+              </div>
+              <div>
+                <input
+                  type="text"
+                  name="detail-value"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                  placeholder="Value"
+                  required="" />
+              </div>
+              <div class="col-span-2 flex justify-end">
+                <button
+                  type="button"
+                  class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800"
+                  id="addProductDetailBtn">
+                  Add Detail
+                </button>
+              </div>
+            </div>
+            <div id="product-details-list" class="mt-4">
+              <!-- Dynamically added product details will appear here -->
+            </div>
+          </div>
+        </div>
+        <button
+          type="submit"
+          id="submitBtn"
+          class="w-full justify-center text-white inline-flex items-center bg-gray-700 hover:bg-gray-800 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-600 dark:hover:bg-gray-500 dark:focus:ring-gray-400">
+          <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path
+              fill-rule="evenodd"
+              d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+              clip-rule="evenodd"></path>
+          </svg>
+          <svg viewBox="25 25 50 50" class="loading !hidden w-13 transform origin-center animate-rotate4">
+            <circle
+              r="20"
+              cy="50"
+              cx="50"
+              fill="none"
+              stroke="hsl(214, 97%, 59%)"
+              stroke-width="2"
+              stroke-dasharray="1, 200"
+              stroke-dashoffset="0"
+              stroke-linecap="round"
+              class="animate-dash4"></circle>
+          </svg>
+
+          Add new product
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById("addProductDetailBtn").addEventListener("click", addProductDetail);
+  function addProductDetail() {
+    const keyInput = document.querySelector('input[name="detail-key"]');
+    const valueInput = document.querySelector('input[name="detail-value"]');
+    const detailsList = document.getElementById("product-details-list");
+
+    if (keyInput.value && valueInput.value) {
+      const detailItem = document.createElement("div");
+      detailItem.className = "flex justify-between items-center mb-2";
+      detailItem.innerHTML = `
+        <span class="text-gray-900 dark:text-white key_value" data-key="${keyInput.value}" data-value="${valueInput.value}">
+          ${keyInput.value}: ${valueInput.value}
+          </span>
+        <button type="button" class="text-red-600 hover:text-red-800" onclick="this.parentElement.remove()">Remove</button>
+      `;
+      detailsList.appendChild(detailItem);
+
+      keyInput.value = "";
+      valueInput.value = "";
+    }
+  }
+</script>

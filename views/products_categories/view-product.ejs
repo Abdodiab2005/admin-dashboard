@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= product.name %> - Product Details</title>
+
+    <link rel="stylesheet" href="/css/build.min.css" />
+  </head>
+  <body class="bg-gray-100">
+    <%- include("../partials/navbar") %> <%- include("../partials/alerts-popups") %>
+    <main class="container mx-auto px-4 py-8 max-w-4xl">
+      <div class="bg-white rounded-lg shadow-lg p-6 mt-16">
+        <!-- Header Section -->
+        <div class="flex justify-between items-center mb-6">
+          <h1 class="text-3xl font-bold text-gray-800"><%= product.name %></h1>
+        </div>
+
+        <!-- Image Preview -->
+        <div class="mb-8">
+          <a href="<%= product.images %>" target="_blank">
+            <img
+              src="<%= product.images %>"
+              alt="Product Image"
+              class="w-full h-96 object-contain rounded-lg border-2 border-gray-200" />
+          </a>
+        </div>
+
+        <!-- Product Info Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <p class="text-gray-600 mb-2">Price</p>
+            <p class="text-2xl font-bold text-gray-800">$<%= product.price %></p>
+          </div>
+
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <p class="text-gray-600 mb-2">Stock Available</p>
+            <p class="text-2xl font-bold text-gray-800"><%= product.stock %> units</p>
+          </div>
+
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <p class="text-gray-600 mb-2">Featured Product</p>
+            <p class="text-xl font-semibold text-gray-800"><%= product.isFeatured ? 'Yes ★' : 'No' %></p>
+          </div>
+
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <p class="text-gray-600 mb-2">Category</p>
+            <p class="text-xl font-semibold text-gray-800"><%= product.categoryId %></p>
+          </div>
+
+          <% if (product.subcategoryId) { %>
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <p class="text-gray-600 mb-2">Subcategory</p>
+            <p class="text-xl font-semibold text-gray-800"><%= product.subcategoryName %></p>
+          </div>
+          <% } %> <% if (product.label) { %>
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <p class="text-gray-600 mb-2">Label</p>
+            <p class="text-xl font-semibold text-gray-800"><%= product.label %></p>
+          </div>
+          <% } %>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-8">
+          <h2 class="text-xl font-semibold mb-4 text-gray-800">Description</h2>
+          <p class="text-gray-600 whitespace-pre-wrap"><%= product.description %></p>
+        </div>
+
+        <% if (product.details && product.details.length > 0) { %>
+        <!-- Product Details -->
+        <div class="mb-8">
+          <h2 class="text-xl font-semibold mb-4 text-gray-800">Product Details</h2>
+          <div class="grid grid-cols-2 gap-4">
+            <% product.details.forEach(detail => { %>
+            <div class="bg-gray-50 p-3 rounded-lg">
+              <span class="font-medium text-gray-700"><%= Object.keys(detail)[0] %>:</span>
+              <span class="text-gray-600"><%= Object.values(detail)[0] %></span>
+            </div>
+            <% }); %>
+          </div>
+        </div>
+        <% } %>
+        <button
+          id="editBtn"
+          class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+          Edit Product
+        </button>
+      </div>
+    </main>
+
+    <!-- Edit Form (Hidden Initially) -->
+    <div id="editForm" class="hidden container mx-auto px-4 py-8 max-w-4xl mt-16">
+      <form id="productForm" class="bg-white rounded-lg shadow-lg p-6">
+        <!-- Form fields will be populated via JavaScript -->
+      </form>
+    </div>
+    <script>
+      // Pass server data to client
+      const productData = <%- JSON.stringify(product) %>;
+      const allCategories = <%- JSON.stringify(categories) %>;
+      // Edit mode toggle
+      let isEditMode = false;
+      const editBtn = document.getElementById("editBtn");
+      const editForm = document.getElementById("editForm");
+      const mainView = document.querySelector("main.container");
+
+      editBtn.addEventListener("click", () => {
+        isEditMode = !isEditMode;
+        mainView.classList.toggle("hidden");
+        editForm.classList.toggle("hidden");
+        if (isEditMode) initEditForm();
+      });
+
+      // Initialize edit form
+      function initEditForm() {
+        const form = document.getElementById("productForm");
+        form.innerHTML = `
+          <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Product Image</label>
+              <div class="flex items-center gap-4">
+                  <a href="${productData.images}" target="_blank">
+                      <img src="${productData.images}" alt="Current Image"
+                       class="w-32 h-32 object-contain border rounded-lg" id="imagePreview">
+                  </a>
+                  <input type="file" id="imageInput" class="hidden" accept="image/*">
+                  <button type="button" onclick="document.getElementById('imageInput').click()"
+                          class="bg-blue-100 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-200">
+                      Change Image
+                  </button>
+              </div>
+          </div>
+
+          <!-- Basic Info Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
+                  <input type="text" name="name" value="${productData.name}"
+                         class="w-full p-2 border rounded-lg" required>
+              </div>
+              <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Price</label>
+                  <input type="number" name="price" value="${productData.price}"
+                         class="w-full p-2 border rounded-lg" step="0.01" required>
+              </div>
+              <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Stock</label>
+                  <input type="number" name="stock" value="${productData.stock}"
+                         class="w-full p-2 border rounded-lg" required>
+              </div>
+              <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Featured</label>
+                  <select name="isFeatured" class="w-full p-2 border rounded-lg">
+                      <option value="true" ${productData.isFeatured ? "selected" : ""}>Yes</option>
+                      <option value="false" ${!productData.isFeatured ? "selected" : ""}>No</option>
+                  </select>
+              </div>
+              <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                  <select name="categoryId" id="categorySelect" class="w-full p-2 border rounded-lg">
+                      ${allCategories.map(
+                        (cat) => `
+                          <option value="${cat.id}"
+                              ${cat.name === productData.categoryId ? "selected" : ""}>
+                              ${cat.name}
+                          </option>`
+                      )}
+                  </select>
+              </div>
+              <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Subcategory</label>
+                  <select name="subcategoryId" id="subcategorySelect" class="w-full p-2 border rounded-lg">
+                      <option value="">Select a subcategory</option>
+                  </select>
+              </div>
+              <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">label</label>
+                  <input type="text" name="labelProduct" id="labelProduct" class="w-full p-2 border rounded-lg" />
+              </div>
+          </div>
+
+          <!-- Description -->
+          <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+              <textarea name="description"
+                  class="w-full p-2 border rounded-lg h-32">${productData.description}</textarea>
+          </div>
+
+          <!-- Product Details -->
+          <div class="mb-6">
+              <div class="flex justify-between items-center mb-4">
+                  <h3 class="text-lg font-medium text-gray-700">Product Details</h3>
+                  <button type="button" onclick="addDetailField()"
+                          class="bg-green-100 text-green-600 px-3 py-1 rounded-lg hover:bg-green-200">
+                      + Add Detail
+                  </button>
+              </div>
+              <div id="detailsContainer" class="space-y-3">
+                  ${
+                    productData.details
+                      ? productData.details
+                          .map((detail, index) => {
+                            const key = Object.keys(detail)[0];
+                            const value = detail[key];
+                            return `
+                            <div class="flex gap-3 items-center">
+                                <input type="text" name="detailKey"
+                                       value="${key}"
+                                       placeholder="Key" class="p-2 border rounded-lg flex-1">
+                                <input type="text" name="detailValue"
+                                       value="${value}"
+                                       placeholder="Value" class="p-2 border rounded-lg flex-1">
+                                <button type="button" onclick="this.parentElement.remove()"
+                                        class="text-red-500 hover:text-red-700">
+                                    ✕
+                                </button>
+                            </div>
+                        `;
+                          })
+                          .join("")
+                      : ""
+                  }
+              </div>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="flex gap-3 justify-end">
+              <button type="button" onclick="cancelEdit()"
+                      class="bg-gray-100 text-gray-600 px-4 py-2 rounded-lg hover:bg-gray-200">
+                  Cancel
+              </button>
+              <button type="submit"
+                      class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                  Save Changes
+              </button>
+          </div>
+        `;
+
+        // Image upload preview
+        document.getElementById("imageInput").addEventListener("change", function (e) {
+          const reader = new FileReader();
+          reader.onload = function (event) {
+            document.getElementById("imagePreview").src = event.target.result;
+          };
+          reader.readAsDataURL(e.target.files[0]);
+        });
+
+        // Populate subcategories based on selected category
+        const categorySelect = document.getElementById("categorySelect");
+        const subcategorySelect = document.getElementById("subcategorySelect");
+
+        function populateSubcategories(categoryId) {
+          const category = allCategories.find((cat) => cat.id === categoryId);
+          subcategorySelect.innerHTML = '<option value="">Select a subcategory</option>';
+          if (category && category.subcategories) {
+            category.subcategories.forEach((subcat) => {
+              const option = document.createElement("option");
+              option.value = subcat.id;
+              option.textContent = subcat.name;
+              option.selected = subcat.id === productData.subcategoryId;
+              subcategorySelect.appendChild(option);
+            });
+            subcategorySelect.disabled = false;
+          } else {
+            subcategorySelect.disabled = true;
+          }
+        }
+
+        categorySelect.addEventListener("change", function () {
+          populateSubcategories(this.value);
+        });
+
+        // Initial population of subcategories
+        populateSubcategories(categorySelect.value);
+      }
+
+      // Add new detail field
+      function addDetailField() {
+        const container = document.getElementById("detailsContainer");
+        const div = document.createElement("div");
+        div.className = "flex gap-3 items-center";
+        div.innerHTML = `
+        <input type="text" name="detailKey"
+               placeholder="Key" class="p-2 border rounded-lg flex-1">
+        <input type="text" name="detailValue"
+               placeholder="Value" class="p-2 border rounded-lg flex-1">
+        <button type="button" onclick="this.parentElement.remove()"
+                class="text-red-500 hover:text-red-700">
+            ✕
+        </button>
+      `;
+        container.appendChild(div);
+      }
+
+      // Cancel edit
+      function cancelEdit() {
+        isEditMode = false;
+        mainView.classList.remove("hidden");
+        editForm.classList.add("hidden");
+      }
+
+      document.getElementById("productForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const submitBtn = e.target.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+
+        try {
+          const formData = new FormData();
+          const details = [];
+
+          // Collect details
+          document.querySelectorAll("#detailsContainer > div").forEach((div) => {
+            const key = div.querySelector('input[name="detailKey"]').value.trim();
+            const value = div.querySelector('input[name="detailValue"]').value.trim();
+            if (key && value) details.push({ [key]: value });
+          });
+
+          // Append fields
+          ["name", "price", "stock", "isFeatured", "categoryId", "subcategoryId", "description"].forEach((field) => {
+            formData.append(field, e.target.elements[field].value);
+          });
+
+          formData.append("details", JSON.stringify(details));
+
+          // Handle image
+          const imageInput = document.getElementById("imageInput");
+          if (imageInput.files[0]) {
+            formData.append("image", imageInput.files[0]);
+          } else {
+            formData.append("existingImage", productData.images);
+          }
+
+          const labelProduct = document.getElementById("labelProduct").value;
+          formData.append("label", labelProduct);
+
+          // Add category and subcategory names
+          const selectedCategory = allCategories.find((cat) => cat.id === e.target.elements.categoryId.value);
+          if (selectedCategory) {
+            formData.append("categoryName", selectedCategory.name);
+
+            const selectedSubcategoryId = e.target.elements.subcategoryId.value;
+            if (selectedSubcategoryId) {
+              const selectedSubcategory = selectedCategory.subcategories.find(
+                (subcat) => subcat.id === selectedSubcategoryId
+              );
+              if (selectedSubcategory) {
+                formData.append("subcategoryName", selectedSubcategory.name);
+              }
+            }
+          }
+
+          const productId = location.pathname.split("/")[3];
+          console.log("Sending to backend");
+          fetch(`/admin/edit/product/${productId}`, {
+            method: "POST",
+            body: formData,
+          })
+            .then(async (response) => {
+              if (!response.ok) {
+                throw new Error("Network response was not ok");
+              }
+              const data = await response.json();
+              if (data.success) {
+                successAlert("Product updated successfully!");
+                setTimeout(() => {
+                  location.reload();
+                }, 1500);
+              } else {
+                errorAlert(data.message || "An error occurred while updating the product.");
+              }
+            })
+            .catch((err) => {
+              console.error("Error updating product:", err);
+              errorAlert("An error occurred while updating the product. Please try again.");
+            })
+            .finally(() => {
+              submitBtn.disabled = false;
+            });
+        } catch (error) {
+          console.error("Error updating product:", error);
+          errorAlert("An error occurred while updating the product. Please try again.");
+          submitBtn.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>

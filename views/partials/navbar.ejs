@@ -1,0 +1,54 @@
+<nav class="bg-gray-800 p-4 md:block fixed top-0 w-full z-50">
+  <div class="container mx-auto flex flex-col justify-between items-center md:flex-row">
+    <div class="w-full flex justify-between items-center">
+      <a href="/" class="text-white text-lg font-bold">Manga Store</a>
+      <button id="menu-toggle" class="text-white md:hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+        </svg>
+      </button>
+    </div>
+    <ul
+      id="menu"
+      class="md:flex z-50 flex sticky hidden flex-col md:flex-row md:static md:min-h-0 md:w-auto gap-1 md:gap-4 text-white top-12 bg-gray-800 right-0 w-full min-h-20 md:bg-transparent md:space-x-2 transition-transform transform md:transform-none translate-y-0 md:translate-y-0">
+      <li>
+        <a href="/" class="block z-50 px-1 py-2 hover:text-gray-400 transition-all">Home</a>
+      </li>
+      <li>
+        <a href="/users" class="block px-1 py-2 hover:text-gray-400 transition-all">Users</a>
+      </li>
+      <li>
+        <a href="/admin/categories" class="block px-1 py-2 hover:text-gray-400 transition-all">Category</a>
+      </li>
+      <li>
+        <a href="/admin/products" class="block px-1 py-2 hover:text-gray-400 transition-all">Products</a>
+      </li>
+      <li>
+        <a href="/admin/slider" class="block px-1 py-2 hover:text-gray-400 transition-all">Slider</a>
+      </li>
+      <li>
+        <a href="/admin/transactions" class="block px-1 py-2 hover:text-gray-400 transition-all">Transacations</a>
+      </li>
+      <li>
+        <a href="/admin/discounts" class="block px-1 py-2 hover:text-gray-400 transition-all">Discounts</a>
+      </li>
+      <li>
+        <a href="/admin/coupons" class="block px-1 py-2 hover:text-gray-400 transition-all">Coupons</a>
+      </li>
+      <li>
+        <a href="/admin/banner" class="block z-50 px-1 py-2 hover:text-gray-400 transition-all">Banner</a>
+      </li>
+      <li>
+        <a href="/admin/tickets" class="block z-50 px-1 py-2 hover:text-gray-400 transition-all">Tickets</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<script>
+  const toggle = document.getElementById("menu-toggle");
+  const menu = document.getElementById("menu");
+  toggle.addEventListener("click", () => {
+    menu.classList.toggle("hidden");
+  });
+</script>

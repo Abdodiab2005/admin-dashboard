@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/build.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer" />
+    <style>
+      body {
+        background: linear-gradient(to bottom, #1e1e2f, #2a2a40);
+        color: #f8f9fa;
+        font-family: "Poppins", sans-serif;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        font-weight: 600;
+        text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+      }
+
+      section {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        justify-content: center;
+        padding: 1rem 2rem;
+      }
+
+      .card {
+        width: 32%;
+        cursor: pointer;
+        height: 350px;
+        background: linear-gradient(145deg, #29293e, #33334d);
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+        text-align: center;
+        padding: 1.5rem;
+        position: relative;
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5);
+        transition: transform 0.3s ease;
+        overflow: hidden;
+      }
+
+      .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.8);
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: linear-gradient(90deg, #ff8a00, #e52e71, #9b59b6);
+        filter: blur(15px);
+        opacity: 0.5;
+      }
+
+      .card i {
+        font-size: 3rem;
+        color: #ffcc00;
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+      }
+
+      .card .title {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #ffffff;
+      }
+
+      .card .body,
+      .card .body i {
+        font-size: 1.2rem;
+        color: #d1d1d1;
+        cursor: pointer;
+      }
+      .card:hover .body i {
+        transform: translateX(10px);
+      }
+      .card .body i {
+        margin-left: 0.5rem;
+        color: #ffcc00;
+        transition: 0.3s;
+      }
+
+      @media (max-width: 768px) {
+        .card {
+          width: 90%;
+        }
+      }
+    </style>
+  </head>
+  <body class="relative">
+    <%- include("./partials/navbar") %>
+    <h1 class="pt-24 ml-10 mb-3">Welcome, Admin!</h1>
+    <section class="mb-10">
+      <div class="card" data-url="/admin/categories">
+        <i class="fa-solid fa-layer-group"></i>
+        <div class="title">Manage Categories</div>
+        <div class="body">Go to your categories and manage them! <i class="fa-solid fa-arrow-right"></i></div>
+      </div>
+      <div class="card" data-url="/users">
+        <i class="fa-solid fa-users"></i>
+        <div class="title">Manage Users</div>
+        <div class="body">View and manage user profiles! <i class="fa-solid fa-arrow-right"></i></div>
+      </div>
+      <div class="card" data-url="/admin/slider">
+        <i class="fa-solid fa-sliders-h"></i>
+        <div class="title">Manage Sliders</div>
+        <div class="body">Customize your website sliders! <i class="fa-solid fa-arrow-right"></i></div>
+      </div>
+      <div class="card" data-url="/admin/transactions">
+        <i class="fa-solid fa-receipt"></i>
+        <div class="title">View Transactions</div>
+        <div class="body">Check transaction history! <i class="fa-solid fa-arrow-right"></i></div>
+      </div>
+      <div class="card" data-url="/admin/products">
+        <i class="fa-solid fa-box-open"></i>
+        <div class="title">Manage Products</div>
+        <div class="body">Add, update, or remove products! <i class="fa-solid fa-arrow-right"></i></div>
+      </div>
+      <div class="card" data-url="/admin/coupons">
+        <i class="fa-solid fa-ticket-alt"></i>
+        <div class="title">Manage Coupons</div>
+        <div class="body">Create and edit coupon codes! <i class="fa-solid fa-arrow-right"></i></div>
+      </div>
+      <div class="card" data-url="/admin/discounts">
+        <i class="fa-solid fa-tags"></i>
+        <div class="title">Manage Discounts</div>
+        <div class="body">Create Discounts for your customers! <i class="fa-solid fa-arrow-right"></i></div>
+      </div>
+      <div class="card" data-url="/admin/banner">
+        <i class="fa-solid fa-rectangle-list"></i>
+        <div class="title">Banner</div>
+        <div class="body">Create a new banner item on home page <i class="fa-solid fa-arrow-right"></i></div>
+      </div>
+      <div class="card" data-url="/admin/tickets">
+        <i class="fa-solid fa-headset"></i>
+        <div class="title">Support</div>
+        <div class="body">Manage customer tickets <i class="fa-solid fa-arrow-right"></i></div>
+      </div>
+      <div class="card" data-url="/admin/q&a">
+        <i class="fa-solid fa-question-circle"></i>
+        <div class="title">Q&A</div>
+        <div class="body">Manage customer questions and answers <i class="fa-solid fa-arrow-right"></i></div>
+      </div>
+      <div class="card" data-url="/pin-category">
+        <i class="fa-solid fa-thumbtack"></i>
+        <div class="title">Pin Category</div>
+        <div class="body">Pin a category for home page <i class="fa-solid fa-arrow-right"></i></div>
+      </div>
+    </section>
+    <script>
+      document.querySelectorAll(".card").forEach((card) => {
+        card.addEventListener("click", () => {
+          window.location.href = card.dataset.url;
+        });
+      });
+    </script>
+  </body>
+</html>

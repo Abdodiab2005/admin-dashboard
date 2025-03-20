@@ -1,0 +1,80 @@
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.3/purify.min.js"
+  integrity="sha512-Ll+TuDvrWDNNRnFFIM8dOiw7Go7dsHyxRp4RutiIFW/wm3DgDmCnRZow6AqbXnCbpWu93yM1O34q+4ggzGeXVA=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"></script>
+
+<script>
+  // Include DOMPurify library
+  function createPopup({ title = "Default Title", inputs = [], confirmText = "Submit" }) {
+    // Use DOMPurify to sanitize and insert the HTML
+    const sanitizedHTML = DOMPurify.sanitize(`
+    <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50  min-w-72" id="popup">
+      <form
+        class="w-64 bg-white rounded-lg shadow-lg p-6 relative flex flex-col items-center gap-4 min-w-72"
+        id="${title}">
+        <span class="text-xl font-bold text-gray-800">${title}</span>
+        <div class="w-full flex flex-col gap-3">
+          <span
+            class="absolute cursor-pointer top-3 right-3 w-7 h-7 rounded-full bg-white shadow-md text-gray-800 text-lg flex items-center justify-center hover:bg-gray-100 transition"
+            id="close-popup">
+            &times;
+          </span>
+          ${inputs
+            .map((input) => {
+              if (input.type === "textarea") {
+                return `
+                  <textarea
+                    id="${input.id}"
+                    name="${input.name}"
+                    placeholder="${input.placeholder}"
+                    class="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-800 focus:ring-2 focus:ring-gray-500 outline-none"
+                    ${input.required ? "required" : ""}>
+                  </textarea>`;
+              } else if (input.type === "select") {
+                return `
+                  <div class="relative w-full max-w-sm">
+                    <label for="${input.id}" class="block text-sm font-medium text-gray-700">${input.label}</label>
+                    <select
+                      name="${input.name}"
+                      id="${input.id}"
+                      class="block cursor-pointer w-full mt-1 py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                      ${input.options
+                        .map((option) => `<option value="${option.value}">${option.label}</option>`)
+                        .join("")}
+                    </select>
+                  </div>`;
+              } else {
+                return `
+                  <input
+                    type="${input.type}"
+                    id="${input.id}"
+                    name="${input.name}"
+                    placeholder="${input.placeholder}"
+                    class="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-800 focus:ring-2 focus:ring-gray-500 outline-none"
+                    ${input.required ? "required" : ""} />`;
+              }
+            })
+            .join("")}
+                <button
+                  type="button"
+                  id="popup-submit-btn"
+                  class="w-full bg-gray-800 text-white text-sm font-semibold py-2 rounded hover:bg-gray-700 transition flex items-center justify-center relative">
+                  ${confirmText}
+                </button>
+        </div>
+      </form>
+    </div>
+  `);
+
+    // Add the popup to the DOM
+    document.body.insertAdjacentHTML("beforeend", sanitizedHTML);
+
+    // Add close functionality
+    const closeBtn = document.getElementById("close-popup");
+    const popup = document.getElementById("popup");
+    closeBtn.addEventListener("click", () => {
+      popup.remove();
+    });
+  }
+</script>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Users</title>
+    <link rel="stylesheet" href="/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="/css/build.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer" />
+  </head>
+  <body class="bg-gray-100">
+    <%- include('partials/navbar') %> <%- include('partials/reusable-popup') %><%- include('partials/alerts-popups') %>
+    <!-- Main Container -->
+    <main class="container mx-auto mt-10 px-4 md:mt-10 md:mb-0 mb-10 pt-16">
+      <!-- Header -->
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-semibold text-gray-800 mb-6 text-center sm:text-left">Users</h1>
+        <button
+          id="addRole"
+          type="button"
+          class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition duration-200 text-xs sm:text-sm">
+          Add role
+        </button>
+      </div>
+      <!-- DataTable Wrapper -->
+      <div class="overflow-x-auto bg-white rounded-lg shadow-md border border-gray-300">
+        <table id="usersTable" class="table-auto w-full text-sm text-left text-gray-500">
+          <thead>
+            <tr class="bg-gray-200">
+              <th class="px-4 py-2 text-center sm:text-left">Name</th>
+              <th class="px-4 py-2 text-center sm:text-left">Email</th>
+              <th class="px-4 py-2 text-center sm:text-left">Phone</th>
+              <th class="px-4 py-2 text-center sm:text-left">provider</th>
+              <th class="px-4 py-2 text-center sm:text-left">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% users.forEach(user => { %>
+            <tr class="border-b border-gray-200 hover:bg-gray-50">
+              <td class="px-4 py-2 text-center sm:text-left"><%= user.displayName %></td>
+              <td class="px-4 py-2 text-center sm:text-left"><%= user.email %></td>
+              <td class="px-4 py-2 text-center sm:text-left"><%= user.phoneNumber %></td>
+              <td class="px-4 py-2 text-center sm:text-left">
+                <% if (user.providerData[0].providerId == "password") {%> <i class="fa-solid fa-envelope"></i> <%} else
+                if (user.providerData[0].providerId == "google.com") {%> <i class="fab fa-google"></i> <% } %>
+              </td>
+              <td class="px-4 py-2 flex justify-center sm:justify-start gap-2 flex-wrap">
+                <button
+                  data-userID="<%= user.uid %>"
+                  class="deleteUserBtn bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition duration-200 text-xs sm:text-sm">
+                  Delete
+                </button>
+
+                <button
+                  data-userID="<%= user.uid %>"
+                  class="disableUserBtn bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition duration-200 text-xs sm:text-sm">
+                  <%= user.disabled == true? "Enable" : "Disable" %>
+                </button>
+                <button
+                  data-userID="<%= user.uid %>"
+                  class="detailsUserBtn bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition duration-200 text-xs sm:text-sm">
+                  Details
+                </button>
+              </td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </main>
+    <!-- Scripts -->
+    <script src="/js/jquery-3.6.0.min.js"></script>
+    <script src="/js/jquery.dataTables.min.js"></script>
+    <script src="/js/crypto-js.min.js"></script>
+    <script src="/js/sweetalert2@11.js"></script>
+    <script src="/js/script/users.js"></script>
+  </body>
+</html>

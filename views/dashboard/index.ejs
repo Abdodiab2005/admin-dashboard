@@ -1,0 +1,211 @@
+<%- include('../partials/header') %>
+
+<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+  <!-- Stats cards -->
+  <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+    <div class="p-5">
+      <div class="flex items-center">
+        <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
+          <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+          </svg>
+        </div>
+        <div class="ml-5 w-0 flex-1">
+          <dl>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Products</dt>
+            <dd class="flex items-baseline">
+              <div class="text-2xl font-semibold text-gray-900 dark:text-gray-100"><%= stats.totalProducts %></div>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+    <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
+      <div class="text-sm">
+        <a href="/admin/products" class="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500"
+          >View all</a
+        >
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+    <div class="p-5">
+      <div class="flex items-center">
+        <div class="flex-shrink-0 bg-green-500 rounded-md p-3">
+          <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap=" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div class="ml-5 w-0 flex-1">
+          <dl>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Revenue</dt>
+            <dd class="flex items-baseline">
+              <div class="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+                $<%= stats.totalRevenue.toFixed(2) %>
+              </div>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+    <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
+      <div class="text-sm">
+        <a href="/admin/transactions" class="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500"
+          >View details</a
+        >
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg">
+    <div class="p-5">
+      <div class="flex items-center">
+        <div class="flex-shrink-0 bg-red-500 rounded-md p-3">
+          <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
+        <div class="ml-5 w-0 flex-1">
+          <dl>
+            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Low Stock Items</dt>
+            <dd class="flex items-baseline">
+              <div class="text-2xl font-semibold text-gray-900 dark:text-gray-100"><%= stats.lowStockCount %></div>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+    <div class="bg-gray-50 dark:bg-gray-700 px-5 py-3">
+      <div class="text-sm">
+        <a
+          href="/admin/products/stock/low-stock"
+          class="font-medium text-indigo-600 dark:text-indigo-400 hover:text-indigo-500"
+          >View all</a
+        >
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Recent activity -->
+<div class="mt-8">
+  <div class="bg-white dark:bg-gray-800 shadow sm:rounded-lg">
+    <div class="px-4 py-5 sm:p-6">
+      <h3 class="text-lg font-medium leading-6 text-gray-900 dark:text-gray-100">Recent Activity</h3>
+      <div class="mt-6 flow-root">
+        <ul role="list" class="-my-5 divide-y divide-gray-200 dark:divide-gray-700">
+          <% if (recentChanges && recentChanges.length > 0) { %> <% recentChanges.forEach(change => { %>
+          <li class="py-4">
+            <div class="flex items-center space-x-4">
+              <div class="flex-shrink-0">
+                <% if (change.action === 'create') { %>
+                <span
+                  class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30">
+                  <svg
+                    class="h-5 w-5 text-green-600 dark:text-green-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                  </svg>
+                </span>
+                <% } else if (change.action === 'update') { %>
+                <span
+                  class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30">
+                  <svg
+                    class="h-5 w-5 text-blue-600 dark:text-blue-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </span>
+                <% } else if (change.action === 'delete') { %>
+                <span
+                  class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
+                  <svg
+                    class="h-5 w-5 text-red-600 dark:text-red-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </span>
+                <% } else if (change.action === 'bulk-discount') { %>
+                <span
+                  class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900/30">
+                  <svg
+                    class="h-5 w-5 text-purple-600 dark:text-purple-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </span>
+                <% } else { %>
+                <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700">
+                  <svg
+                    class="h-5 w-5 text-gray-600 dark:text-gray-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </span>
+                <% } %>
+              </div>
+              <div class="min-w-0 flex-1">
+                <p class="truncate text-sm font-medium text-gray-900 dark:text-gray-100">
+                  <%= change.action.charAt(0).toUpperCase() + change.action.slice(1) %> <%= change.resource %> <% if
+                  (change.details && change.details.productName) { %> - <%= change.details.productName %> <% } %>
+                </p>
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                  <%= new Date(change.timestamp).toLocaleString() %> by <%= change.userId %>
+                </p>
+              </div>
+            </div>
+          </li>
+          <% }); %> <% } else { %>
+          <li class="py-4 text-center text-sm text-gray-500 dark:text-gray-400">No recent activity</li>
+          <% } %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

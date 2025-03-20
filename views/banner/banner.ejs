@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manage Banner</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="/css/build.min.css" />
+    <style>
+      input[type="number"]::-webkit-outer-spin-button,
+      input[type="number"]::-webkit-inner-spin-button {
+        display: none;
+      }
+      .fancy i {
+        transition: all 0.3s ease-in-out;
+      }
+
+      .fancy:hover i {
+        color: white;
+        background: black;
+      }
+      .fancy:hover span {
+        color: white;
+        padding-left: 1.5em;
+      }
+      /* From Uiverse.io by adamgiebl */
+      .dots-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+      }
+
+      .dot {
+        height: 20px;
+        width: 20px;
+        margin-right: 10px;
+        border-radius: 10px;
+        background-color: #b3d4fc;
+        animation: pulse 1.5s infinite ease-in-out;
+      }
+
+      .dot:last-child {
+        margin-right: 0;
+      }
+
+      .dot:nth-child(1) {
+        animation-delay: -0.3s;
+      }
+
+      .dot:nth-child(2) {
+        animation-delay: -0.1s;
+      }
+
+      .dot:nth-child(3) {
+        animation-delay: 0.1s;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(0.8);
+          background-color: #b3d4fc;
+          box-shadow: 0 0 0 0 rgba(178, 212, 252, 0.7);
+        }
+
+        50% {
+          transform: scale(1.2);
+          background-color: #6793fb;
+          box-shadow: 0 0 0 10px rgba(178, 212, 252, 0);
+        }
+
+        100% {
+          transform: scale(0.8);
+          background-color: #b3d4fc;
+          box-shadow: 0 0 0 0 rgba(178, 212, 252, 0.7);
+        }
+      }
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  </head>
+  <body class="bg-gray-50 relative">
+    <%- include("./modals/alerts-popups") %><%- include("../partials/navbar") %>
+    <div
+      class="flex -top-0 flex-col items-center justify-center bg-gradient-to-br from-zinc-500 to-zinc-700 bg-opacity-80 fixed w-screen h-screen backdrop-blur-md"
+      style="z-index: 100"
+      id="loadingContainer">
+      <section class="dots-container">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </section>
+    </div>
+    <main class="max-w-3xl mx-auto bg-white p-6 shadow-md rounded-lg mt-16">
+      <h1 class="text-2xl font-semibold mb-6">Manage Banner</h1>
+
+      <!-- Form Section -->
+      <form id="bannerForm">
+        <!-- Main Title -->
+        <div class="mb-4">
+          <label for="mainTitle" class="block text-sm font-medium text-gray-700">Main Title</label>
+          <input
+            id="mainTitle"
+            type="text"
+            class="mt-1 p-2 w-full border rounded-md focus:ring-blue-500 focus:border-blue-500" />
+        </div>
+
+        <!-- Add Image Upload Field -->
+        <div class="mb-4">
+          <label for="bannerImage" class="block text-sm font-medium text-gray-700">Banner Image</label>
+          <input
+            id="bannerImage"
+            type="file"
+            accept="image/*"
+            class="mt-1 p-2 w-full border rounded-md focus:ring-blue-500 focus:border-blue-500" />
+          <img id="previewImage" src="" alt="Preview" class="mt-2 w-32 h-32 object-cover rounded-md hidden" />
+        </div>
+
+        <!-- Body -->
+        <div class="mb-4">
+          <label for="body" class="block text-sm font-medium text-gray-700">Body</label>
+          <textarea
+            id="body"
+            class="mt-1 p-2 w-full border rounded-md focus:ring-blue-500 focus:border-blue-500"></textarea>
+        </div>
+
+        <!-- Subtitle -->
+        <div class="mb-4">
+          <label for="subtitle" class="block text-sm font-medium text-gray-700">Subtitle</label>
+          <input
+            id="subtitle"
+            type="text"
+            class="mt-1 p-2 w-full border rounded-md focus:ring-blue-500 focus:border-blue-500" />
+        </div>
+
+        <!-- Action Button -->
+        <div class="mb-4">
+          <label for="actionLink" class="block text-sm font-medium text-gray-700">Action Button Text</label>
+          <input
+            id="actionText"
+            type="text"
+            class="mt-1 p-2 w-full border rounded-md focus:ring-blue-500 focus:border-blue-500" />
+        </div>
+        <div class="mb-4">
+          <label for="actionLink" class="block text-sm font-medium text-gray-700">Action Button Link</label>
+          <input
+            id="actionLink"
+            type="url"
+            class="mt-1 p-2 w-full border rounded-md focus:ring-blue-500 focus:border-blue-500" />
+        </div>
+
+        <!-- Enable/Disable Toggle -->
+        <div class="mb-4 flex items-center">
+          <input
+            id="isEnabled"
+            type="checkbox"
+            class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+          <label for="isEnabled" class="ml-2 text-sm text-gray-700">Enable banner</label>
+        </div>
+
+        <!-- Save Button -->
+        <button id="saveButton" type="button" class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700">
+          Save
+        </button>
+      </form>
+    </main>
+
+    <script>
+      $(document).ready(function () {
+        $("#loadingContainer").html("").addClass("!hidden");
+        function showAlert(selector, message, duration = 3000) {
+          const alert = $(selector);
+          alert.find(".popup-text").text(message);
+          alert.addClass("active").removeClass("!hidden");
+          setTimeout(() => {
+            alert.removeClass("active").addClass("!hidden");
+          }, duration);
+        }
+
+        const successAlert = (msg) => showAlert("#success-alert", msg);
+        const errorAlert = (err) => showAlert("#err-alert", `Error: ${err}`);
+        const warnAlert = (warn) => showAlert("#warn-alert", `Warning: ${warn}`);
+        const infoAlert = (msg) => showAlert("#info-alert", msg);
+
+        // Fetch existing data and set preview image
+        $.get("/admin/banner-data", function (data) {
+          $("#mainTitle").val(data.mainTitle);
+          $("#subtitle").val(data.subtitle);
+          $("#body").val(data.body);
+          $("#actionText").val(data.actionText);
+          $("#actionLink").val(data.actionLink);
+          $("#isEnabled").prop("checked", data.isEnabled);
+
+          if (data.image) {
+            $("#previewImage").attr("src", data.image).removeClass("hidden");
+          }
+        });
+
+        // Handle Image Upload Preview
+        $("#bannerImage").on("change", function () {
+          const file = this.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              $("#previewImage").attr("src", e.target.result).removeClass("hidden");
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
+        // Save data, including the image
+        $("#saveButton").click(function () {
+          const formData = new FormData();
+          const bannerData = {
+            mainTitle: $("#mainTitle").val(),
+            subtitle: $("#subtitle").val(),
+            body: $("#body").val(),
+            actionText: $("#actionText").val(),
+            actionLink: $("#actionLink").val(),
+            isEnabled: $("#isEnabled").is(":checked"),
+          };
+
+          // Add the image file to the FormData if provided
+          const imageFile = $("#bannerImage")[0].files[0];
+          if (imageFile) {
+            formData.append("image", imageFile);
+          } else if ($("#previewImage").attr("src")) {
+            formData.append("image", $("#previewImage").attr("src"));
+          }
+
+          // Log the FormData object (for debugging)
+          for (const [key, value] of formData.entries()) {
+            console.log(`${key}:`, value);
+          }
+          // Add banner data to the FormData
+          formData.append("bannerData", JSON.stringify(bannerData));
+
+          $.ajax({
+            url: "/admin/save-banner",
+            type: "POST",
+            processData: false,
+            contentType: false,
+            data: formData,
+            success: function (response) {
+              successAlert(response.message);
+            },
+            error: function (xhr) {
+              const response = JSON.parse(xhr.responseText);
+              errorAlert(`Failed to update banner: ${response.message}`);
+            },
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
