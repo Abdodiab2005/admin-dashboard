@@ -5,6 +5,8 @@ const path = require("path");
 const dotenv = require("dotenv");
 dotenv.config();
 
+console.log(path.resolve(process.env.FIREBASE_SERVICE_ACCOUNT_KEY));
+
 admin.initializeApp({
   credential: admin.credential.cert(path.resolve(process.env.FIREBASE_SERVICE_ACCOUNT_KEY)),
 });

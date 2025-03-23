@@ -35,9 +35,9 @@ router.get("/transactions", verifyAdmin, async (req, res) => {
 router.post("/transaction/update-transaction", verifyAdmin, async (req, res) => {
   const { transactionId, status, proof } = req.body;
 
-  // console.log("Transaction ID:", transactionId);
-  // console.log("Status:", status);
-  // console.log("Proof:", proof);
+  console.log("Transaction ID:", transactionId);
+  console.log("Status:", status);
+  console.log("Proof:", proof);
 
   if (!transactionId) {
     return res.status(400).json({ error: "Transaction ID is required." });
@@ -57,7 +57,7 @@ router.post("/transaction/update-transaction", verifyAdmin, async (req, res) => 
     let updatedProduct;
     if (proof && proof.id) {
       transData.products.forEach((product) => {
-        // console.log("Product ID:", product);
+        console.log("Product ID:", product);
         if (product.productId === proof.id) {
           updatedProduct = proof.data;
         }

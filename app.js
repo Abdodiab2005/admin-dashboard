@@ -66,6 +66,10 @@ app.use("/", logoutRoute);
 const pinCategory = require("./routes/pin-category");
 app.use("/", pinCategory);
 
+// ! 
+const batchOperationsRoutes = require('./routes/batch-operations');
+app.use('/', batchOperationsRoutes);
+
 // Start the server
 const PORT = process.env.PORT || 3200;
 app.listen(PORT, () => {
