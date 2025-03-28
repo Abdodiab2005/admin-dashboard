@@ -262,8 +262,6 @@
             endDate: endTimestamp,
           };
 
-          console.log("Sending data:", productData);
-
           $.ajax({
             url: "/admin/add/discount",
             method: "POST",
@@ -404,14 +402,11 @@
           .off("click")
           .on("click", ".view-btn", function () {
             const id = $(this).data("id");
-            console.log("Viewing coupon:", id);
 
             $.ajax({
               url: `/admin/view/discounts/${id}`,
               method: "GET",
               success: function (response) {
-                console.log("Success:", response);
-
                 const popup = $("#popup-details");
 
                 // Ensure the popup is visible
@@ -431,10 +426,8 @@
                 let discountedPrice;
                 if (discount.discountType === "percentage") {
                   discountedPrice = product.price * (1 - discount.discountValue / 100);
-                  console.log(discountedPrice);
                 } else if (discount.discountType === "fixed") {
                   discountedPrice = product.price - discount.discountValue;
-                  console.log(discountedPrice);
                 }
 
                 const isValidClass = discount.isActive ? "text-green-600" : "text-red-600";
@@ -513,12 +506,10 @@
         $(document).on("click", "#conf-delte-btn-popup", function (e) {
           e.preventDefault();
           const id = $(this).data("id");
-          console.log("Deleting coupon:", id);
           $.ajax({
             url: `/admin/delete/discount/${id}`,
             method: "DELETE",
             success: function (response) {
-              console.log("discount deleted successfully:", response);
               successAlert(response.message);
               setTimeout(() => {
                 location.reload();
@@ -536,7 +527,6 @@
         });
         $(".delete-btn").on("click", function (event) {
           const id = $(this).data("id");
-          console.log("Deleting discount:", id);
           $("#delte-popup").removeClass("!hidden");
           $("#conf-delte-btn-popup").data("id", id);
         });

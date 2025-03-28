@@ -38,7 +38,6 @@
     <script>
       async function pinCategory(categoryName) {
         // Add your logic to pin the category
-        console.log(`Pinning category: ${categoryName}`);
         // Example: send a request to the backend to pin the category
         const response = await fetch("/pin-category", {
           method: "POST",
@@ -61,8 +60,6 @@
 
       function unpinCategory(categoryName) {
         // Add your logic to unpin the category
-
-        console.log(`Unpinning category: ${categoryName}`);
         // Example: send a request to the backend to unpin the category
         fetch("/pin-category", {
           method: "DELETE",

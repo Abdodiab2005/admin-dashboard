@@ -121,16 +121,13 @@
 
     <script>
       function openProofModal(productId) {
-        console.log("Product ID: ", productId);
         document.getElementById("productId").value = productId;
         const product = <%- JSON.stringify(order.products) %>.find((p) => p.id === productId);
-        console.log("Product: ", product);
         const proofInputs = document.getElementById("proofInputs");
         proofInputs.innerHTML = "";
 
           if (product.proof) {
             product.proof.forEach((p) => {
-              console.log(p);
               addProofInput(p.key, p.value, p.createdAt);
             });
           }
@@ -175,7 +172,6 @@
 
         try {
           showLoading();
-          console.log(proof);
           const response = await fetch("/admin/transaction/update-transaction", {
             method: "POST",
             headers: {

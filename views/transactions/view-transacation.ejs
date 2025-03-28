@@ -9,7 +9,7 @@
   <body class="bg-gray-100">
     <%- include("../partials/navbar") %> <%- include("../partials/alerts-popups") %>
     <div class="container mx-auto px-4 py-8 pt-16">
-      <h1 class="text-3xl font-bold mb-8 text-center">Transaction Details</h1>
+      <h1 class="text-3xl font-bold mb-8 text-center pt-6">Transaction Details</h1>
 
       <div class="bg-white shadow-md rounded-lg overflow-hidden">
         <div class="p-6">
@@ -18,6 +18,7 @@
             <div>
               <p><span class="font-semibold">Name:</span> <%= transaction.name %></p>
               <p><span class="font-semibold">Phone:</span> <%= transaction.phoneNumber %></p>
+              <p><span class="font-semibold">Transaction id:</span> <%= transactionId %></p>
             </div>
             <div>
               <p><span class="font-semibold">Country:</span> <%= transaction.country %></p>
@@ -32,17 +33,19 @@
           <p>
             <span class="font-semibold">Status:</span>
             <span class="px-2 py-1 rounded-full text-sm">
-              <% if (transaction.status == "ToPay") { %>
+              <% if (transaction.status[transaction.status.length - 1].state == "ToPay") { %>
               <span class="text-red-500 bg-red-100 rounded-full py-1 px-2 font-bold">ToPay</span>
-              <% } else if (transaction.status == "Preparing") { %>
+              <% } else if (transaction.status[transaction.status.length - 1].state == "Preparing") { %>
               <span class="text-yellow-500 bg-yellow-100 rounded-full py-1 px-2 font-bold">Preparing</span>
-              <% } else if (transaction.status == "Delivering") { %>
+              <% } else if (transaction.status[transaction.status.length - 1].state == "Delivering") { %>
               <span class="text-blue-500 bg-blue-100 rounded-full py-1 px-2 font-bold">Delivering</span>
-              <% } else if (transaction.status == "Deilevered") { %>
+              <% } else if (transaction.status[transaction.status.length - 1].state == "Deilevered") { %>
               <span class="text-green-500 bg-green-100 rounded-full py-1 px-2 font-bold">Delievered</span>
-              <% } else if (transaction.status == "Viewed") { %>
+              <% } else if (transaction.status[transaction.status.length - 1].state == "Viewed") { %>
               <span class="text-purple-500 bg-purple-100 rounded-full py-1 px-2 font-bold">Viewed</span>
-              <% } else if (transaction.status == "Rejected") { %>
+              <% } else if (transaction.status[transaction.status.length - 1].state == "unconfirmed") { %>
+              <span class="text-red-500 bg-red-100 rounded-full py-1 px-2 font-bold">unconfirmed</span>
+              <% } else if (transaction.status[transaction.status.length - 1].state == "Rejected") { %>
               <span class="text-red-500 bg-red-100 rounded-full py-1 px-2 font-bold">Rejected</span>
               <% } %></span
             >
@@ -123,6 +126,10 @@
           </div>
         </div>
       </div>
+    </div>
+    <div
+      class="my-10 flex justify-center items-center w-full text-2xl underline font-semibold text-blue-700 hover:text-blue-900 transition-all duration-300">
+      <a href="/admin/deliver-order/<%= transactionId %>">Deliever</a>
     </div>
   </body>
 </html>

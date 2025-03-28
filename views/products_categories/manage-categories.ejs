@@ -405,7 +405,6 @@
             url: `/admin/view-category/${catId}`,
             type: "GET",
             success: function (response) {
-              console.log(response);
               try {
                 const popup = $("#popup-details");
                 popup.removeClass("hidden");
@@ -475,7 +474,6 @@
             url: `/admin/view-subcategory/${catId}/${subcatId}`,
             type: "GET",
             success: function (response) {
-              console.log(response);
               try {
                 const popup = $("#popup-details");
                 popup.removeClass("hidden");

@@ -233,14 +233,12 @@
             type,
             expiryDate: timestamp,
           };
-          console.log("Sending data:", productData);
           $.ajax({
             url: "/admin/add/coupon",
             method: "POST",
             contentType: "application/json",
             data: JSON.stringify(productData),
             success: function (response) {
-              console.log("Success:", response);
               successAlert(response.message);
               $("#add-popup").addClass("!hidden");
               setTimeout(() => {
@@ -255,7 +253,6 @@
           });
         });
         $(".close-popup").on("click", function () {
-          console.log("Close popup");
           $(".popup").addClass("!hidden");
           $("#name").val("");
           $("#amount").val("");
@@ -347,14 +344,11 @@
           .off("click")
           .on("click", ".view-btn", function () {
             const id = $(this).data("id");
-            console.log("Viewing coupon:", id);
 
             $.ajax({
               url: `/admin/view/coupon/${id}`,
               method: "GET",
               success: function (response) {
-                console.log("Success:", response);
-
                 const popup = $("#popup-details");
 
                 // Ensure the popup is visible
@@ -370,7 +364,6 @@
                 // Generate styled popup content
                 const isValidClass = response.coupon.isValid ? "text-green-600" : "text-red-600";
                 const isValidText = response.coupon.isValid ? "Valid" : "Expired";
-                console.log(response.coupon.expired);
                 const expiryDate = new Date(response.coupon.expired._seconds * 1000).toLocaleString();
 
                 const popupContent = `
@@ -425,12 +418,10 @@
         $(document).on("click", "#conf-delte-btn-popup", function (e) {
           e.preventDefault();
           const id = $(this).data("id");
-          console.log("Deleting coupon:", id);
           $.ajax({
             url: `/admin/delete/coupon/${id}`,
             method: "DELETE",
             success: function (response) {
-              console.log("Coupon deleted successfully:", response);
               successAlert(response.message);
               setTimeout(() => {
                 location.reload();
@@ -448,7 +439,6 @@
         });
         $(".delete-btn").on("click", function (event) {
           const id = $(this).data("id");
-          console.log("Deleting coupon:", id);
           $("#delte-popup").removeClass("!hidden");
           $("#conf-delte-btn-popup").data("id", id);
         });

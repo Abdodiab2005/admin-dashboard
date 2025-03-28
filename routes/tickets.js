@@ -6,6 +6,8 @@ const upload = multer({ dest: "uploads/", limits: { fileSize: 3 * 1024 * 1024 } 
 const cloudinary = require("cloudinary").v2;
 const { Timestamp } = admin.firestore;
 const verifyAdmin = require("../middlewares/verifyAdmin");
+const RepliedTicketTemplate = require("../templates/RepliedTicketTemplate");
+const { sendEmail } = require("../utils/mailer");
 
 const fs = require("fs");
 
@@ -60,6 +62,7 @@ router.post("/reply/ticket", upload.array("files", 5), verifyAdmin, async (req, 
       return;
     }
     const ticketData = ticket.data();
+
     const replies = ticketData.messages || [];
     const reply = {
       message: message,
@@ -78,6 +81,11 @@ router.post("/reply/ticket", upload.array("files", 5), verifyAdmin, async (req, 
       .collection("tickets")
       .doc(ticketId)
       .update({ messages: replies, updatedAt: Timestamp.now(), status: status });
+
+    const emailTicketData = { ticketId: ticketId, status: status, createdAt: reply.createdAt };
+    const emailTicketTemplate = new RepliedTicketTemplate(emailTicketData);
+    await sendEmail(ticketData.email, emailTicketTemplate);
+
     res.json({ message: "Reply sent successfully" });
   } catch (error) {
     console.error("Error replying to ticket:", error);

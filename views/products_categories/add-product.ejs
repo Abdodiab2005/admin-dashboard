@@ -226,7 +226,6 @@
             const uid = await fetch("/admin/get-uid", {
               method: "GET",
             }).then((res) => res.json());
-            console.log(uid);
             await fetch("https://store.mohammed-zuhair.online/update-products", {
               method: "POST",
               headers: {

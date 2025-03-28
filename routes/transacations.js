@@ -3,6 +3,28 @@ const router = express.Router();
 const { admin, db } = require("../utils/firebase");
 const verifyAdmin = require("../middlewares/verifyAdmin");
 const { Timestamp } = admin.firestore;
+const { sendEmail } = require("../utils/mailer");
+const {
+  ToPayTemplate,
+  DeliveredTemplate,
+  ConfirmedTemplate,
+  EmailVerifyTemplate,
+  rejectedTemplate,
+} = require("../templates");
+const { encryptData, decryptData } = require("../utils/cryptoHelper");
+
+function formatTransactionData(transaction) {
+  return {
+    orderId: transaction.id,
+    placedDate: new Date(transaction.createdAt._seconds * 1000).toISOString().split("T")[0], // Convert timestamp to YYYY-MM-DD
+    paymentMethod: transaction.paymentMethod,
+    currency: transaction.currency,
+    items: transaction.products.map((product) => ({
+      orderItem: product.name,
+      totalPrice: parseFloat(product.price), // Convert price string to number
+    })),
+  };
+}
 
 router.get("/transactions", verifyAdmin, async (req, res) => {
   const transactions = await db.collection("transactions").get();
@@ -35,29 +57,24 @@ router.get("/transactions", verifyAdmin, async (req, res) => {
 router.post("/transaction/update-transaction", verifyAdmin, async (req, res) => {
   const { transactionId, status, proof } = req.body;
 
-  console.log("Transaction ID:", transactionId);
-  console.log("Status:", status);
-  console.log("Proof:", proof);
-
   if (!transactionId) {
     return res.status(400).json({ error: "Transaction ID is required." });
   }
 
   try {
     const transactionRef = await db.collection("transactions").doc(transactionId).get();
-    console.log("Transaction Ref:", transactionRef.exists);
     if (!transactionRef.exists) {
-      console.log("Not exists");
+      console.error("Transaction not found.");
       return res.status(404).json({ error: "Transaction not found." });
     }
     const transData = {
       id: transactionRef.id,
       ...transactionRef.data(),
     };
+
     let updatedProduct;
     if (proof && proof.id) {
       transData.products.forEach((product) => {
-        console.log("Product ID:", product);
         if (product.productId === proof.id) {
           updatedProduct = proof.data;
         }
@@ -72,6 +89,41 @@ router.post("/transaction/update-transaction", verifyAdmin, async (req, res) => 
         .update({
           status: admin.firestore.FieldValue.arrayUnion(status),
         });
+
+      // !-------------------------------------------------------!
+      const userRecord = await admin.auth().getUser(transData.uid);
+      const userEmail = userRecord.email;
+      // ?=-----------------------------------------------------?
+
+      switch (status.state) {
+        case "ToPay":
+          const formattedToPayOrder = formatTransactionData(transData);
+          const toPayEmail = new ToPayTemplate(formattedToPayOrder);
+          await sendEmail(userEmail, toPayEmail);
+          break;
+
+        case "Delivered":
+          const formattedDeliveredOrder = formatTransactionData(transData);
+          const DeliveredEmail = new DeliveredTemplate(formattedDeliveredOrder);
+          await sendEmail(userEmail, DeliveredEmail);
+          break;
+
+        case "Preparing":
+          const formattedPreparingOrder = formatTransactionData(transData);
+          const PreparingEmail = new ConfirmedTemplate(formattedPreparingOrder);
+          await sendEmail(userEmail, PreparingEmail);
+          break;
+
+        case "Rejected":
+          const formattedRejectedOrder = formatTransactionData(transData);
+          const rejectedEmail = new rejectedTemplate(formattedRejectedOrder, status.message, status.state);
+          await sendEmail(userEmail, rejectedEmail);
+          break;
+
+        default:
+          break;
+      }
+
       return res.status(200).json({ success: true, message: "Transaction updated successfully." });
     }
     updatedProduct.forEach((product) => {
@@ -79,11 +131,23 @@ router.post("/transaction/update-transaction", verifyAdmin, async (req, res) => 
     });
 
     if (proof) {
+      const encryptedProofData = proof.data.map((p) => {
+        const encryptedData = {};
+        for (let k in p) {
+          if (k !== "createdAt") {
+            encryptedData[k] = encryptData(p[k]);
+          } else {
+            encryptedData[k] = p[k];
+          }
+        }
+        encryptedData.updatedAt = Timestamp.now();
+        return encryptedData;
+      });
       const transactionDoc = await db.collection("transactions").doc(transactionId).get();
       const transactionData = transactionDoc.data();
       const updatedProduct = transactionData.products.map((product) => {
         if (product.productId === proof.id) {
-          product.proof = proof.data;
+          product.proof = encryptedProofData;
           return product;
         }
         return product;
@@ -108,11 +172,13 @@ router.get("/view/transaction/:transacationId", verifyAdmin, async (req, res) =>
   const transactionId = req.params.transacationId;
   try {
     const transaction = await db.collection("transactions").doc(transactionId).get();
+
     if (!transaction.exists) {
       return res.status(404).json({ error: "Transaction not found." });
     }
     const data = transaction.data();
-    res.render("transactions/view-transacation", { transaction: data }); // Ensure the response wraps the data in a 'transaction' key
+
+    res.render("transactions/view-transacation", { transaction: data, transactionId }); // Ensure the response wraps the data in a 'transaction' key
   } catch (error) {
     console.error("Error getting transaction:", error);
     res.status(500).json({ error: "Failed to get transaction." });
@@ -164,7 +230,17 @@ router.get("/deliver-order/:orderId", verifyAdmin, async (req, res) => {
         quantity: p.quantity,
         details: p.description,
         img: p.img,
-        proof: p.proof,
+        proof: p.proof?.map((p) => {
+          const decryptedData = {};
+          for (let k in p) {
+            if (k !== "createdAt" && k !== "updatedAt") {
+              decryptedData[k] = decryptData(p[k], false);
+            } else {
+              decryptedData[k] = p[k];
+            }
+          }
+          return decryptedData;
+        }),
       })),
       paymentMethod: orderData.paymentMethod,
     };

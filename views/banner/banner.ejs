@@ -234,11 +234,6 @@
           } else if ($("#previewImage").attr("src")) {
             formData.append("image", $("#previewImage").attr("src"));
           }
-
-          // Log the FormData object (for debugging)
-          for (const [key, value] of formData.entries()) {
-            console.log(`${key}:`, value);
-          }
           // Add banner data to the FormData
           formData.append("bannerData", JSON.stringify(bannerData));
 

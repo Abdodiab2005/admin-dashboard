@@ -16,6 +16,7 @@
     "autoprefixer": "^10.4.20",
     "body-parser": "^1.20.3",
     "cloudinary": "^2.5.1",
+    "compression": "^1.8.0",
     "cookie-parser": "^1.4.7",
     "crypto-js": "^4.2.0",
     "csurf": "^1.10.0",
@@ -26,7 +27,10 @@
     "express": "^4.21.2",
     "firebase": "^11.3.1",
     "firebase-admin": "^13.0.2",
+    "helmet": "^8.1.0",
+    "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.10.0",
     "postcss": "^8.4.49",
     "sweetalert2": "^11.15.10",
     "tailwindcss": "^3.4.17"

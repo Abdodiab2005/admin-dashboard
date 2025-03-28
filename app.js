@@ -3,12 +3,20 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 const dotenv = require("dotenv");
+// const helmet = require("helmet");
+const compression = require("compression");
+const morgan = require("morgan");
 const verifyAdmin = require("./middlewares/verifyAdmin");
 dotenv.config();
 
 const app = express();
+// Middleware
+app.use(compression());
+app.use(morgan("combined"));
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(cookieParser());
@@ -66,9 +74,31 @@ app.use("/", logoutRoute);
 const pinCategory = require("./routes/pin-category");
 app.use("/", pinCategory);
 
-// ! 
-const batchOperationsRoutes = require('./routes/batch-operations');
-app.use('/', batchOperationsRoutes);
+// ! Batch operations
+const batchOperationsRoutes = require("./routes/batch-operations");
+app.use("/", batchOperationsRoutes);
+
+// ! Marketing emails
+const marketingEmails = require("./routes/marketing");
+app.use("/", marketingEmails);
+
+// Error handling
+app.use((req, res, next) => {
+  res.status(404).render("error", {
+    title: "Page Not Found",
+    message: "The page you are looking for does not exist.",
+    statusCode: 404,
+  });
+});
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).render("error", {
+    title: "Server Error",
+    message: "Something went wrong on our end.",
+    statusCode: 500,
+  });
+});
 
 // Start the server
 const PORT = process.env.PORT || 3200;

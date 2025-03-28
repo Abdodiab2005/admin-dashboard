@@ -350,7 +350,6 @@
           }
 
           const productId = location.pathname.split("/")[3];
-          console.log("Sending to backend");
           fetch(`/admin/edit/product/${productId}`, {
             method: "POST",
             body: formData,

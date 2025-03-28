@@ -69,7 +69,6 @@ $(document).ready(function () {
         url: `/admin/product/delete/${productId}`,
         type: "DELETE",
         success: (response) => {
-          console.log(response);
           if (response.success) {
             successAlert("Product deleted successfully!");
             delPop.addClass("!hidden");

@@ -814,7 +814,7 @@ router.post("/edit/product/:prodId", upload.single("image"), verifyAdmin, async 
 // ! Get product
 router.get("/get/product", verifyAdmin, async (req, res) => {
   const { prodId } = req.query;
-  console.log("prodId:", prodId);
+  // console.log("prodId:", prodId);
   if (!prodId) {
     return res.status(400).json({ success: false, message: "prodId is required." });
   }
